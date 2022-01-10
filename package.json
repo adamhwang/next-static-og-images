@@ -1,0 +1,36 @@
+{
+  "name": "next-static-og-images",
+  "version": "0.0.1",
+  "description": "Generate static open graph images for Next.js at build time",
+  "main": "dist/index.ts",
+  "bin": {
+    "next-static-og-images": "./bin/cli"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adamhwang/next-static-og-images"
+  },
+  "keywords": [
+    "nextjs",
+    "open-graph",
+    "og",
+    "images"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "puppeteer": "^13.0.1",
+    "tree-kill": "^1.2.2",
+    "typescript": "^4.5.4",
+    "xml2js": "^0.4.23",
+    "yargs": "^17.3.1"
+  },
+  "devDependencies": {
+    "@types/xml2js": "^0.4.9",
+    "@types/yargs": "^17.0.8"
+  }
+}
