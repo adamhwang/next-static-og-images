@@ -5,7 +5,11 @@ import puppeteer from 'puppeteer';
 const urlToImage = async (options: puppeteer.Viewport & { type?: puppeteer.ScreenshotOptions["type"], ogImageSelector?: string }, urlPaths: { url: string, path: string }[]) => {
   const { type, ogImageSelector, ...viewPortOptions } = options;
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ 
+    headless: true, 
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    defaultViewport: viewPortOptions ? viewPortOptions : null,
+  });
 
   await Promise.all(urlPaths.map(async (urlPath) => {
     const dir = path.dirname(urlPath.path);
@@ -15,7 +19,6 @@ const urlToImage = async (options: puppeteer.Viewport & { type?: puppeteer.Scree
     }
 
     const page = await browser.newPage();
-    viewPortOptions && await page.setViewport(viewPortOptions)
 
     await page.goto(urlPath.url, {
       waitUntil: "networkidle0"
