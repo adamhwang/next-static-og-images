@@ -11,8 +11,8 @@ import urlToImage from "./urlToImage";
 (async () => {
     const { saveLocation, sitemapFilename, screenshotType, width, height, deviceScaleFactor } = await yargs(process.argv.slice(2))
         .default({
-            saveLocation: './open-graph',
-            sitemapFilename: 'sitemap.xml',
+            saveLocation: './public/open-graph',
+            sitemapFilename: './public/sitemap.xml',
             screenshotType: 'png',
             width: 1200,
             height: 630,
@@ -20,7 +20,7 @@ import urlToImage from "./urlToImage";
         })
         .argv;
     
-    const sitemapXml = fs.readFileSync(path.join("./public/", sitemapFilename)).toString();
+    const sitemapXml = fs.readFileSync(sitemapFilename).toString();
     const getSitemap = util.promisify<convertableToString, any>(parseString)(sitemapXml);
 
     const child = spawn('npm', ['start'], { shell: true });
@@ -41,16 +41,15 @@ import urlToImage from "./urlToImage";
     
         const relativeUrls: string[] = sitemap.urlset.url.map((u: any) => new URL(u.loc[0]).pathname);
 
-        const publicSaveLocation = path.join('./public', saveLocation);        
-        if (fs.existsSync(publicSaveLocation)) {
-            await util.promisify(fs.rm)(publicSaveLocation, { recursive: true });
-            console.log(`Deleted folder ${publicSaveLocation}`);
+        if (fs.existsSync(saveLocation)) {
+            await util.promisify(fs.rm)(saveLocation, { recursive: true });
+            console.log(`Deleted folder ${saveLocation}`);
         }
 
         await urlToImage({ type: screenshotType as "png" | "jpeg" | "webp", width, height, deviceScaleFactor }, relativeUrls.map(relativeUrl => {
             return {
                 url: host + relativeUrl,
-                path: path.join(publicSaveLocation, (relativeUrl === '/' ? 'index' : relativeUrl) + '.' + screenshotType),
+                path: path.join(saveLocation, (relativeUrl === '/' ? 'index' : relativeUrl) + '.' + screenshotType),
             }
         }))
         
