@@ -2,8 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import puppeteer from 'puppeteer';
 
-const urlToImage = async (options: puppeteer.Viewport & { type?: puppeteer.ScreenshotOptions["type"], ogImageSelector?: string }, urlPaths: { url: string, path: string }[]) => {
-  const { type, ogImageSelector, ...viewPortOptions } = options;
+const urlToImage = async (options: puppeteer.Viewport & { type?: puppeteer.ScreenshotOptions["type"], ogImageSelector?: string, waitUntil: puppeteer.PuppeteerLifeCycleEvent }, urlPaths: { url: string, path: string }[]) => {
+  const { type, ogImageSelector, waitUntil, ...viewPortOptions } = options;
 
   const browser = await puppeteer.launch({ 
     headless: true, 
@@ -21,7 +21,7 @@ const urlToImage = async (options: puppeteer.Viewport & { type?: puppeteer.Scree
     const page = await browser.newPage();
 
     await page.goto(urlPath.url, {
-      waitUntil: "networkidle0"
+      waitUntil
     });
   
     let target: Pick<puppeteer.Page, "screenshot"> = page;

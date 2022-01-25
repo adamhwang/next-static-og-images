@@ -47,6 +47,7 @@ width|Page width used to create screenshot. Default `1200`|number
 height|Page height used to create screenshot. Default `630`|number
 deviceScaleFactor|Page device scale factor used to create screenshot. See [devicePixelRatio](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio) for more info. Default `1`|number
 ogImageSelector|If specified, screenshot will be based on the first instance a matching instance. If no elements match, the page will be used. Default `undefined`|string
+waitUntil|When to consider navigation succeeded. See [waitUntil](https://pptr.dev/#?product=Puppeteer&version=v13.0.1&show=api-framewaitfornavigationoptions) for more info. Default `"networkidle2"`|string
 
 Image sizes will match the page height and width unless an image selector is used.
 

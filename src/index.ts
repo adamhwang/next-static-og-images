@@ -9,7 +9,7 @@ import * as util from 'util';
 import urlToImage from "./urlToImage";
 
 (async () => {
-    const { saveLocation, sitemapFilename, screenshotType, width, height, deviceScaleFactor, ogImageSelector } = await yargs(process.argv.slice(2))
+    const { saveLocation, sitemapFilename, screenshotType, width, height, deviceScaleFactor, ogImageSelector, waitUntil } = await yargs(process.argv.slice(2))
         .default({
             saveLocation: './public/open-graph',
             sitemapFilename: './public/sitemap.xml',
@@ -18,6 +18,7 @@ import urlToImage from "./urlToImage";
             height: 630,
             deviceScaleFactor: 1,
             ogImageSelector: undefined,
+            waitUntil: 'networkidle2'
         })
         .argv;
     
@@ -47,7 +48,7 @@ import urlToImage from "./urlToImage";
             console.log(`Deleted folder ${saveLocation}`);
         }
 
-        await urlToImage({ type: screenshotType as "png" | "jpeg" | "webp", width, height, deviceScaleFactor, ogImageSelector }, relativeUrls.map(relativeUrl => {
+        await urlToImage({ type: screenshotType as "png" | "jpeg" | "webp", width, height, deviceScaleFactor, ogImageSelector, waitUntil: waitUntil as any }, relativeUrls.map(relativeUrl => {
             return {
                 url: host + relativeUrl,
                 path: path.join(saveLocation, (relativeUrl === '/' ? 'index' : relativeUrl) + '.' + screenshotType),
