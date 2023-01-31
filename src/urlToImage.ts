@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import puppeteer from 'puppeteer';
+import { Viewport, ScreenshotOptions, PuppeteerLifeCycleEvent, launch, Page, ElementHandle} from 'puppeteer';
 
-const urlToImage = async (options: puppeteer.Viewport & { type?: puppeteer.ScreenshotOptions["type"], ogImageSelector?: string, waitUntil: puppeteer.PuppeteerLifeCycleEvent }, urlPaths: { url: string, path: string }[]) => {
+const urlToImage = async (options: Viewport & { type?: ScreenshotOptions["type"], ogImageSelector?: string, waitUntil: PuppeteerLifeCycleEvent }, urlPaths: { url: string, path: string }[]) => {
   const { type, ogImageSelector, waitUntil, ...viewPortOptions } = options;
 
-  const browser = await puppeteer.launch({ 
+  const browser = await launch({ 
     headless: true, 
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
     defaultViewport: viewPortOptions ? viewPortOptions : null,
@@ -24,17 +24,19 @@ const urlToImage = async (options: puppeteer.Viewport & { type?: puppeteer.Scree
       waitUntil
     });
   
-    let target: Pick<puppeteer.Page, "screenshot"> = page;
-    try {
-      if (ogImageSelector) {
-        await page.waitForSelector(ogImageSelector, { timeout: 100 });
-        target = await page.$(ogImageSelector) || page;
+    let target: ElementHandle<Element> | null = null;
+    
+    if (ogImageSelector) {
+      await page.waitForSelector(ogImageSelector, { timeout: 100 });
+      target = await page.$(ogImageSelector);
+      if (target) {
+        await target.screenshot({ omitBackground: true, path: urlPath.path, type });
       }
     }
-    catch {
-      target = page;
+
+    if (!target) {
+      await page.screenshot({ omitBackground: true, path: urlPath.path, type });
     }
-    await target.screenshot({ omitBackground: true, path: urlPath.path, type });
     console.log(`Saved screenshot of ${urlPath.url} to ${urlPath.path}`);
   
     await page.close();
