@@ -1,6 +1,6 @@
 {
   "name": "next-static-og-images",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Generate static open graph images for Next.js at build time",
   "main": "dist/index.ts",
   "bin": {
