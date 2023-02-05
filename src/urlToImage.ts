@@ -27,8 +27,12 @@ const urlToImage = async (options: Viewport & { type?: ScreenshotOptions["type"]
     let target: ElementHandle<Element> | null = null;
     
     if (ogImageSelector) {
-      await page.waitForSelector(ogImageSelector, { timeout: 100 });
-      target = await page.$(ogImageSelector);
+      try
+      {
+        await page.waitForSelector(ogImageSelector);
+        target = await page.$(ogImageSelector);
+      } catch {}
+
       if (target) {
         await target.screenshot({ omitBackground: true, path: urlPath.path, type });
       }
