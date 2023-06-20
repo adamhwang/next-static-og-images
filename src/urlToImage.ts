@@ -6,7 +6,6 @@ const urlToImage = async (options: Viewport & { type?: ScreenshotOptions["type"]
   const { type, ogImageSelector, waitUntil, ...viewPortOptions } = options;
 
   const browser = await launch({ 
-    headless: true, 
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
     defaultViewport: viewPortOptions ? viewPortOptions : null,
   });
